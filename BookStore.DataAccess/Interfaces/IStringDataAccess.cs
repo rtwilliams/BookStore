@@ -1,5 +1,4 @@
-﻿
-namespace BookStore.DataAccess.Interfaces
+﻿namespace BookStore.DataAccess.Interfaces
 {
     public interface IStringDataAccess : IRetrieve, IStore, IDelete
     {

@@ -1,20 +1,16 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using BookStore.DataAccess.Interfaces;
 using BookStore.Interfaces.Book;
-using BookStore.Interfaces.BookHandler;
+using BookStore.Interfaces.BookListHandler;
 
 namespace BookStore.Classes
 {
-    public abstract class BookListHandler : IBookHandler
+    public abstract class BookListHandler : IBookCollection
     {
-        public IStringDataAccess BookRepository { get; set; }
         public Dictionary<string, IBook> Books { get; set; }
 
-        protected BookListHandler(IStringDataAccess dataRepository)
+        protected BookListHandler()
         {
-            BookRepository = dataRepository;
             Books = new Dictionary<string, IBook>();
         }
 
@@ -37,6 +33,14 @@ namespace BookStore.Classes
         public List<IBook> GetBooks()
         {
             return Books.Values.ToList();
+        }
+
+        public void PrintBooks()
+        {
+            foreach(var book in GetBooks())
+            {
+                book.Print();
+            }
         }
     }
 }

@@ -49,8 +49,9 @@
     <Compile Include="Classes\BookListHandlerCsv.cs" />
     <Compile Include="Classes\BookListHandler.cs" />
     <Compile Include="Classes\BookListHandlerJson.cs" />
-    <Compile Include="Interfaces\BookHandler\IBookHandler.cs" />
-    <Compile Include="Interfaces\BookHandler\ISave.cs" />
+    <Compile Include="Interfaces\BookListHandler\IBookCollection.cs" />
+    <Compile Include="Interfaces\BookListHandler\IBookListHandler.cs" />
+    <Compile Include="Interfaces\BookListHandler\IBookSave.cs" />
     <Compile Include="Interfaces\Book\IBook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

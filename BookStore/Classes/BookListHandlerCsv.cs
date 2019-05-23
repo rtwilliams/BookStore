@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Globalization;
 using BookStore.DataAccess.Interfaces;
 using BookStore.Interfaces.Book;
-using BookStore.Interfaces.BookHandler;
+using BookStore.Interfaces.BookListHandler;
 
 namespace BookStore.Classes
 {
-    public class BookListHandlerCsv : BookListHandler, ISave
+    public class BookListHandlerCsv : BookListHandler, IBookListHandler
     {
-        public BookListHandlerCsv(IStringDataAccess dataRepository) : base(dataRepository)
+        public IStringDataAccess BookRepository { get; set; }
+
+        public BookListHandlerCsv(IStringDataAccess dataRepository)
         {
-            var bookDataSet = BookRepository.RetrieveDataAsList();
-            foreach (var line in bookDataSet)
-            {
-                AddBook(line);
-            }
+            BookRepository = dataRepository;
         }
 
         public void Save()
@@ -23,6 +21,9 @@ namespace BookStore.Classes
             BookRepository.StoreData(GetParsedBookList());
         }
 
+        /// <summary>
+        /// Returns a parsed list of books. 
+        /// </summary>
         public IEnumerable<string> GetParsedBookList()
         {
             var parsedBookList = new List<string>();

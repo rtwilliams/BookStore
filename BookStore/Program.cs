@@ -3,107 +3,101 @@ using System.IO;
 using BookStore.Classes;
 using BookStore.DataAccess;
 using BookStore.Interfaces.Book;
+using BookStore.Interfaces.BookListHandler;
 
 namespace BookStore
 {
     class Program
     {
         private const int bookMax = 5;
+        private static readonly Random random = new Random();
 
         static void Main()
         {
-            var random = new Random();
-            RunFlatFileExample(random);
-            RunJsonFileExample(random);
+            RunFlatFileExample();
+            RunJsonFileExample();
         }
 
-        private static void RunFlatFileExample(Random random)
+        /// <summary>
+        /// Adds books to collection; optionally removes a book; and saves book collection to csv file.
+        /// Reads book collection from file and prints output to screen.
+        /// </summary>
+        private static void RunFlatFileExample()
         {
             Console.WriteLine("Flat File Example");
             Console.WriteLine("-----------------");
 
-            // Save as Text file 
+            // Create text (csv) file handler 
             var textFileBookDbDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BookDB.csv");
             var textFileBookDb = new FileInfo(textFileBookDbDirectoryPath);
             var bookListHandlerCsv = new BookListHandlerCsv(new DataFileRepository(textFileBookDb));
 
-            IBook ranBook;
-            int dictIndex = 0;
-            for (int i = 0; i < bookMax; i++)
-            {
-                ranBook = GetRandomBook(random.Next(bookMax));
-                bookListHandlerCsv.Add(ranBook);
-                if (bookListHandlerCsv.BookCount() > dictIndex)
-                {
-                    Console.WriteLine("Added book: " + ranBook.Name);
-                    dictIndex++;
-                }
-            }
-            ranBook = GetRandomBook(random.Next(bookMax));
-            bookListHandlerCsv.Remove(ranBook);
-            if (bookListHandlerCsv.BookCount() < dictIndex)
-                Console.WriteLine("Removed book: " + ranBook.Name);
-
-            bookListHandlerCsv.Save();
-            Console.WriteLine("Books Saved to Text File!");
-            Console.WriteLine("");
+            ProcessFile(bookListHandlerCsv, random);
 
             // Retrieve and output books from Text file
             Console.WriteLine("Writing from Text File");
             Console.WriteLine("----------------------");
-            textFileBookDb = new FileInfo(textFileBookDbDirectoryPath);
-            bookListHandlerCsv = new BookListHandlerCsv(new DataFileRepository(textFileBookDb));
-            foreach (var book in bookListHandlerCsv.GetBooks())
-            {
-                book.Print();
-            }
+            bookListHandlerCsv.PrintBooks();
         }
 
-        private static void RunJsonFileExample(Random random)
+        /// <summary>
+        /// Adds books to collection; optionally removes a book; and saves book collection to json file.
+        /// Reads book collection from file and prints output to screen.
+        /// </summary>
+        private static void RunJsonFileExample()
         {
             Console.WriteLine("Json File Example");
             Console.WriteLine("-----------------");
 
-            // Save as Json file
+            // Create json handler
             var jsonBookDbDirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BookDB.json");
             var jsonBookDb = new FileInfo(jsonBookDbDirectoryPath);
             var jsonFileBookHandler = new BookListHandlerJson(new DataFileRepository(jsonBookDb));
 
+            ProcessFile(jsonFileBookHandler, random);
+
+            // Retrieve and output books from Json File
+            Console.WriteLine("Writing from Json File");
+            Console.WriteLine("----------------------");
+            jsonFileBookHandler.PrintBooks();
+        }
+
+        /// <summary>
+        /// Adds books to collection; optionally removes a book; saves book collection to file.
+        /// </summary>
+        /// <param name="bookHander">Handler for processing books</param>
+        /// <param name="random">Random number generator</param>
+        private static void ProcessFile(IBookListHandler bookHander, Random random)
+        {
             IBook ranBook;
             int dictIndex = 0;
             for (int i = 0; i < bookMax; i++)
             {
                 ranBook = GetRandomBook(random.Next(bookMax));
-                jsonFileBookHandler.Add(ranBook);
-                if (jsonFileBookHandler.BookCount() > dictIndex)
+                bookHander.Add(ranBook);
+                if (bookHander.BookCount() > dictIndex)
                 {
                     Console.WriteLine("Added book: " + ranBook.Name);
                     dictIndex++;
                 }
             }
             ranBook = GetRandomBook(random.Next(bookMax));
-            jsonFileBookHandler.Remove(ranBook);
-            if (jsonFileBookHandler.BookCount() < dictIndex)
+            bookHander.Remove(ranBook);
+            if (bookHander.BookCount() < dictIndex)
                 Console.WriteLine("Removed book: " + ranBook.Name);
 
-            jsonFileBookHandler.Save();
-            Console.WriteLine("Books Saved to Json File!");
+            bookHander.Save();
+            Console.WriteLine("Books Saved to File!");
             Console.WriteLine("");
-
-            // Retrieve and output books from Json File
-            Console.WriteLine("Writing from Json File");
-            Console.WriteLine("----------------------");
-            jsonBookDb = new FileInfo(jsonBookDbDirectoryPath);
-            jsonFileBookHandler = new BookListHandlerJson(new DataFileRepository(jsonBookDb));
-            foreach (var book in jsonFileBookHandler.GetBooks())
-            {
-                book.Print();
-            }
         }
 
-        private static IBook GetRandomBook(int i)
+        /// <summary>
+        /// Returns a book by number passed in.
+        /// </summary>
+        /// <param name="randomIndex">Random number between 0 and bookMax</param>
+        private static IBook GetRandomBook(int randomIndex)
         {
-            switch (i)
+            switch (randomIndex)
             {
                 case 0:
                     return MobyDick();

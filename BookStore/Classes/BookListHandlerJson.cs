@@ -1,22 +1,19 @@
-﻿using System.Collections.Generic;
-using BookStore.DataAccess.Interfaces;
-using BookStore.Interfaces.BookHandler;
+﻿using BookStore.DataAccess.Interfaces;
+using BookStore.Interfaces.BookListHandler;
 using Newtonsoft.Json;
 
 namespace BookStore.Classes
 {
-    public class BookListHandlerJson : BookListHandler, ISave
+    /// <summary>
+    /// Handles operations for adding, removing, returing, printing, and saving book list to json file.
+    /// </summary>
+    public class BookListHandlerJson : BookListHandler, IBookListHandler
     {
-        public BookListHandlerJson(IStringDataAccess dataRepository) : base(dataRepository)
-        {
-            var fileText = BookRepository.RetrieveDataAsText();
-            if (fileText.Length == 0) return;
+        public IStringDataAccess BookRepository { get; set; }
 
-            var books = JsonConvert.DeserializeObject<Dictionary<string, Book>>(fileText);
-            foreach (var book in books.Values)
-            {
-                base.Add(book);
-            }
+        public BookListHandlerJson(IStringDataAccess dataRepository)
+        {
+            BookRepository = dataRepository;
         }
 
         public void Save()
@@ -24,6 +21,9 @@ namespace BookStore.Classes
             BookRepository.StoreData(GetParsedBookList());
         }
 
+        /// <summary>
+        /// Returns a parsed list of books. 
+        /// </summary>
         public string GetParsedBookList()
         {
             return JsonConvert.SerializeObject(Books);
