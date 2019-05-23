@@ -22,7 +22,3 @@ Therefore, the goal of this solution is to de-couple data access from console la
 
 Dependency injection is used to inject the context, in this case is a FileInfo object, to the Repository class.
 
-To run: 
- * Update appSettings for file locations in BookStore\App.config
- * Add test calls to Main method in BookStore\Program.cs
-
