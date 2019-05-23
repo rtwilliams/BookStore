@@ -5,3 +5,6 @@
 /BookStore.Tests/bin
 /BookStore.Tests/obj
 /.vs
+*.lock
+.vs/BookStore/v15/Server/sqlite3/storage.ide-shm
+.vs/BookStore/v15/Server/sqlite3/storage.ide-wal
