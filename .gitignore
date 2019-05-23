@@ -27,3 +27,6 @@ project.assets.json
 /BookStore.DataAccess/obj
 /BookStore.Tests/bin
 /BookStore.Tests/obj
+
+# Visual Studio files
+/.vs
