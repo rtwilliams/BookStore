@@ -1,0 +1,7 @@
+/BookStore/bin
+/BookStore/obj
+/BookStore.DataAccess/bin
+/BookStore.DataAccess/obj
+/BookStore.Tests/bin
+/BookStore.Tests/obj
+/.vs
